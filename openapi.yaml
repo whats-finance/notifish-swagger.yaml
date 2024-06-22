@@ -1,0 +1,188 @@
+openapi: 3.0.0
+info:
+  description: A API permite que você envie e receba mensagens do WhatsApp utilizando a plataforma Notifish. Crie uma conta no Notifish e obtenha as informações necessárias para autenticação.
+  title: API Notifish Documentação
+  version: 1.0.0
+servers:
+  - url: http://{domain_url}:8000/api/v1/{instance_uuid}
+    variables:
+      domain_url:
+        default: MEU_DOMINIO
+        description: Domain of sistem
+      instance_uuid:
+        default: MINHA_INSTANCE
+        description: UUID of the instance
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+tags:
+  - name: Instâncias
+    description: Operações relacionadas a instâncias do WhatsApp
+  - name: Mensagens
+    description: Operações relacionadas a mensagens do WhatsApp
+paths:
+  /api/v1/whatsapp/message:
+    post:
+      tags:
+        - Mensagens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                message:
+                  type: string
+                phone:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: Mensagem de callback removida com sucesso
+      summary: Callback Whatsapp - remover
+
+  /generate-token:
+    put:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                token:
+                  properties:
+                    name:
+                      type: string
+                  type: object
+                user:
+                  properties:
+                    email:
+                      type: string
+                    password:
+                      type: string
+                  type: object
+              type: object
+      responses:
+        '201':
+          description: Token generated successfully
+      summary: Gerar token
+
+  /whatsapp/add-number:
+    get:
+      tags:
+        - Instâncias
+      responses:
+        '200':
+          description: Número adicionado com sucesso
+      summary: Adicionar número
+  /whatsapp/list-instances:
+    get:
+      tags:
+        - Instâncias
+      responses:
+        '200':
+          description: Lista de instâncias retornada com sucesso
+      summary: Lista de instâncias
+  /whatsapp/login:
+    get:
+      tags:
+        - Instâncias
+      responses:
+        '200':
+          description: Sessão iniciada com sucesso
+      summary: Iniciar sessão
+  /whatsapp/message/link:
+    post:
+      tags:
+        - Mensagens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                identifier:
+                  type: string
+                message:
+                  type: string
+                recipient_phone:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: Link enviado com sucesso
+      summary: Enviando Link
+  /whatsapp/message/reprocess:
+    post:
+      tags:
+        - Mensagens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                id:
+                  items:
+                    type: integer
+                  type: array
+              type: object
+      responses:
+        '200':
+          description: Mensagem reprocessada com sucesso
+      summary: Reprocessar mensagem - mês atual
+  /whatsapp/message:
+    post:
+      tags:
+        - Mensagens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                identifier:
+                  type: string
+                message:
+                  type: string
+                recipient_phone:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: Mensagem enviada com sucesso
+      summary: Enviando mensagem
+  /whatsapp/qrcode:
+    post:
+      tags:
+        - Instâncias
+      responses:
+        '200':
+          description: QR code gerado com sucesso
+      summary: Gerando QR code
+  /whatsapp/send-file/base64:
+    post:
+      tags:
+        - Mensagens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                archive:
+                  type: string
+                caption:
+                  type: string
+                filename:
+                  type: string
+                identifier:
+                  type: string
+                recipient_phone:
+                  type: string
+                type:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: Arquivo enviado com sucesso
+      summary: Enviando arquivo base64
