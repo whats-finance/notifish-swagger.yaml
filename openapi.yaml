@@ -4,7 +4,7 @@ info:
   title: API Notifish Documentação
   version: 1.0.0
 servers:
-  - url: http://{domain_url}:8000/api/v1/{instance_uuid}
+  - url: http://{domain_url}.notifish.com/api/v1/{instance_uuid}
     variables:
       domain_url:
         default: MEU_DOMINIO
