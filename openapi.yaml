@@ -35,49 +35,161 @@ paths:
           application/json:
             schema:
               properties:
-                message:
-                  type: string
                 phone:
+                  type: string
+                message:
                   type: string
               type: object
       responses:
         '200':
-          description: Mensagem de callback removida com sucesso
-      summary: Callback Whatsapp - remover
+          description: Mensagem enviada com sucesso
+      summary: Enviar mensagem
 
-  /generate-token:
-    put:
+  /authorize/register/tenant:
+    post:
+      tags:
+        - Instâncias
       requestBody:
         content:
           application/json:
             schema:
               properties:
-                token:
-                  properties:
-                    name:
-                      type: string
+                tenant:
                   type: object
+                  properties:
+                    corporate_name:
+                      type: string
+                    corporate_responsable:
+                      type: string
+                    corporate_fantasy_name:
+                      type: string
+                    corporate_domain_tenant:
+                      type: string
+                    corportate_description:
+                      type: string
+                    corporte_address:
+                      type: string
+                    corporate_complement:
+                      type: string
+                    corporate_number:
+                      type: string
+                    corporate_city:
+                      type: string
+                    acronym_uf:
+                      type: string
+                    corporate_zipcode:
+                      type: string
+                    corporate_cpf_cnpj:
+                      type: string
+                    corporate_phone:
+                      type: string
+                    corporate_phone2:
+                      type: string
+                    corporate_whatsapp:
+                      type: string
+                    corporate_email:
+                      type: string
+                    corporate_plan_uuid:
+                      type: string
+                details:
+                  type: object
+                  properties:
+                    site_registration:
+                      type: string
+                    site_registration_name:
+                      type: string
+                    your_identifier:
+                      type: string
+              type: object
+      responses:
+        '201':
+          description: Registro de tenant realizado com sucesso
+      summary: Registro de Tenant
+
+  /authorize/generate-token:
+    put:
+      tags:
+        - Autenticação
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
                 user:
+                  type: object
                   properties:
                     email:
                       type: string
                     password:
                       type: string
+                token:
                   type: object
+                  properties:
+                    name:
+                      type: string
               type: object
       responses:
         '201':
-          description: Token generated successfully
+          description: Token gerado com sucesso
       summary: Gerar token
 
-  /whatsapp/add-number:
+  /testing/api/auth/user:
+    get:
+      tags:
+        - Autenticação
+      responses:
+        '200':
+          description: Autenticação testada com sucesso
+      summary: Testar login
+
+  /whatsapp/add-instance:
+    post:
+      tags:
+        - Instâncias
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                whatsapp:
+                  type: string
+                nickname:
+                  type: string
+                url_callback:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: Instância adicionada com sucesso
+      summary: Adicionar instância
+
+  /whatsapp/login:
+    post:
+      tags:
+        - Instâncias
+      responses:
+        '200':
+          description: Sessão iniciada com sucesso
+      summary: Iniciar sessão
+
+  /whatsapp/status:
     get:
       tags:
         - Instâncias
       responses:
         '200':
-          description: Número adicionado com sucesso
-      summary: Adicionar número
+          description: Status da instância retornado com sucesso
+      summary: Status da conexão
+
+  /whatsapp/restart:
+    get:
+      tags:
+        - Instâncias
+      responses:
+        '200':
+          description: Instância reiniciada com sucesso
+      summary: Reiniciar instância
+
   /whatsapp/list-instances:
     get:
       tags:
@@ -86,15 +198,8 @@ paths:
         '200':
           description: Lista de instâncias retornada com sucesso
       summary: Lista de instâncias
-  /whatsapp/login:
-    get:
-      tags:
-        - Instâncias
-      responses:
-        '200':
-          description: Sessão iniciada com sucesso
-      summary: Iniciar sessão
-  /whatsapp/message/link:
+
+  /whatsapp/message:
     post:
       tags:
         - Mensagens
@@ -103,17 +208,82 @@ paths:
           application/json:
             schema:
               properties:
-                identifier:
+                recipient_phone:
                   type: string
                 message:
                   type: string
-                recipient_phone:
+                identifier:
                   type: string
+                link:
+                  type: boolean
+                typing:
+                  type: string
+                delayMessage:
+                  type: integer
               type: object
       responses:
         '200':
-          description: Link enviado com sucesso
-      summary: Enviando Link
+          description: Mensagem enviada com sucesso
+      summary: Enviar mensagem
+
+  /whatsapp/send-media:
+    post:
+      tags:
+        - Mensagens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                recipient_phone:
+                  type: string
+                identifier:
+                  type: string
+                delay:
+                  type: integer
+                media:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                    caption:
+                      type: string
+                    archive:
+                      type: string
+                    filename:
+                      type: string
+              type: object
+      responses:
+        '200':
+          description: Mídia enviada com sucesso
+      summary: Enviar mídia
+
+  /whatsapp/send-narrated-audio:
+    post:
+      tags:
+        - Mensagens
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                recipient_phone:
+                  type: string
+                identifier:
+                  type: string
+                delay:
+                  type: integer
+                audio:
+                  type: object
+                  properties:
+                    url:
+                      type: string
+              type: object
+      responses:
+        '200':
+          description: Áudio narrado enviado com sucesso
+      summary: Enviar áudio narrado
+
   /whatsapp/message/reprocess:
     post:
       tags:
@@ -124,65 +294,11 @@ paths:
             schema:
               properties:
                 id:
+                  type: array
                   items:
                     type: integer
-                  type: array
               type: object
       responses:
         '200':
-          description: Mensagem reprocessada com sucesso
-      summary: Reprocessar mensagem - mês atual
-  /whatsapp/message:
-    post:
-      tags:
-        - Mensagens
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                identifier:
-                  type: string
-                message:
-                  type: string
-                recipient_phone:
-                  type: string
-              type: object
-      responses:
-        '200':
-          description: Mensagem enviada com sucesso
-      summary: Enviando mensagem
-  /whatsapp/qrcode:
-    post:
-      tags:
-        - Instâncias
-      responses:
-        '200':
-          description: QR code gerado com sucesso
-      summary: Gerando QR code
-  /whatsapp/send-file/base64:
-    post:
-      tags:
-        - Mensagens
-      requestBody:
-        content:
-          application/json:
-            schema:
-              properties:
-                archive:
-                  type: string
-                caption:
-                  type: string
-                filename:
-                  type: string
-                identifier:
-                  type: string
-                recipient_phone:
-                  type: string
-                type:
-                  type: string
-              type: object
-      responses:
-        '200':
-          description: Arquivo enviado com sucesso
-      summary: Enviando arquivo base64
+          description: Mensagens reprocessadas com sucesso
+      summary: Reprocessar mensagem
